@@ -18,10 +18,17 @@ build() {
   cd "$_pkgname-$pkgver"
   
   pnpm install
-  pnpm build
+  pnpm run build
   
-  cd src-tauri
-  cargo build --release
+  # Build the Tauri binary (bundling will fail but that's ok)
+  pnpm tauri build 2>&1 | tee build.log || true
+  
+  # Verify the binary was actually built
+  if [ ! -f "src-tauri/target/release/powerctl" ]; then
+    echo "ERROR: Binary was not built!"
+    cat build.log
+    return 1
+  fi
 }
 
 package() {
