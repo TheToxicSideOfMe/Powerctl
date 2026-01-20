@@ -3,22 +3,22 @@ pkgname=powerctl
 _pkgname=PowerCTL
 pkgver=0.1.0
 pkgrel=1
-pkgdesc="PowerCTL: CPU/GPU power profile manager for Linux"
+pkgdesc="CPU/GPU power profile manager for Linux with Tauri GUI"
 arch=('x86_64')
 url="https://github.com/TheToxicSideOfMe/Powerctl"
 license=('MIT')
-depends=('power-profiles-daemon')
+depends=('power-profiles-daemon' 'webkit2gtk' 'gtk3')
+optdepends=('supergfxctl: For GPU power management on supported systems')
 makedepends=('rust' 'cargo' 'nodejs' 'pnpm')
-source=("$pkgname-$pkgver.tar.gz::$url/archive/refs/tags/v$pkgver.tar.gz")
-sha256sums=('SKIP') # replace with actual checksum in production
-
 install=powerctl.install
+source=("$pkgname-$pkgver.tar.gz::$url/archive/refs/tags/v$pkgver.tar.gz")
+sha256sums=('6a8a8896f0fcc1fe3fc3963aaf9d9c3783c26216b1c054dd014af4d61c7b6484')
 
 build() {
   cd "$_pkgname-$pkgver"
 
-  # Install JS deps and build frontend
-  pnpm install
+  # Install JS dependencies and build frontend
+  pnpm install --frozen-lockfile
   pnpm tauri build
 }
 
@@ -27,14 +27,18 @@ package() {
 
   # Install the Tauri binary
   install -Dm755 \
-    src-tauri/target/release/powerctl \
+    "src-tauri/target/release/powerctl" \
     "$pkgdir/usr/bin/powerctl"
 
-  # Include installer script so users can run it manually
+  # Install the installer script
   install -Dm755 \
-    src-tauri/scripts/install-powerctl.sh \
+    "src-tauri/scripts/install-powerctl.sh" \
     "$pkgdir/usr/local/bin/install-powerctl.sh"
 
-  # Optional: install license
+  # Install license
   install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+
+  
+  install -Dm644 "powerctl.desktop" "$pkgdir/usr/share/applications/powerctl.desktop"
+  
 }
