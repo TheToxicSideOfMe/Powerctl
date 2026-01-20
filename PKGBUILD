@@ -1,7 +1,7 @@
 # Maintainer: Rayen Stark <Rayen.Stark@protonmail.com>
 pkgname=powerctl
 _pkgname=Powerctl
-pkgver=0.1.0
+pkgver=0.1.1
 pkgrel=1
 pkgdesc="CPU/GPU power profile manager for Linux with Tauri GUI"
 arch=('x86_64')
