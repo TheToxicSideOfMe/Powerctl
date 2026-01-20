@@ -132,11 +132,13 @@ echo -e "${YELLOW}Creating systemd service...${NC}"
 cat > /etc/systemd/system/powerctl-restore.service << 'EOF'
 [Unit]
 Description=Restore PowerCTL power profile
-After=sysinit.target
+After=power-profiles-daemon.service
+Wants=power-profiles-daemon.service
 
 [Service]
 Type=oneshot
 ExecStart=/usr/local/bin/powerctl-apply-boot
+RemainAfterExit=yes
 
 [Install]
 WantedBy=multi-user.target
@@ -144,10 +146,10 @@ EOF
 echo -e "${GREEN}✓ Created /etc/systemd/system/powerctl-restore.service${NC}"
 
 # Enable and start service
-echo -e "${YELLOW}Enabling systemd service...${NC}"
+echo -e "${YELLOW}Enabling and starting systemd service...${NC}"
 systemctl daemon-reload
-systemctl enable powerctl-restore.service
-echo -e "${GREEN}✓ Service enabled (will restore profile on boot)${NC}"
+systemctl enable --now powerctl-restore.service
+echo -e "${GREEN}✓ Service enabled and started${NC}"
 
 # Setup polkit rule for GUI access
 echo -e "${YELLOW}Creating polkit authorization rule...${NC}"
