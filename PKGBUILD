@@ -1,6 +1,6 @@
 # Maintainer: Rayen Stark <Rayen.Stark@protonmail.com>
 pkgname=powerctl
-_pkgname=PowerCTL
+_pkgname=Powerctl
 pkgver=0.1.0
 pkgrel=1
 pkgdesc="CPU/GPU power profile manager for Linux with Tauri GUI"
@@ -11,34 +11,30 @@ depends=('power-profiles-daemon' 'webkit2gtk' 'gtk3')
 optdepends=('supergfxctl: For GPU power management on supported systems')
 makedepends=('rust' 'cargo' 'nodejs' 'pnpm')
 install=powerctl.install
-source=("$pkgname-$pkgver.tar.gz::$url/archive/refs/tags/v$pkgver.tar.gz")
+source=("$pkgname-$pkgver.tar.gz::$url/archive/refs/tags/$pkgver.tar.gz")
 sha256sums=('6a8a8896f0fcc1fe3fc3963aaf9d9c3783c26216b1c054dd014af4d61c7b6484')
 
 build() {
   cd "$_pkgname-$pkgver"
-
-  # Install JS dependencies and build frontend
-  pnpm install --frozen-lockfile
-  pnpm tauri build
+  
+  pnpm install
+  pnpm build
+  
+  cd src-tauri
+  cargo build --release
 }
 
 package() {
   cd "$_pkgname-$pkgver"
-
+  
   # Install the Tauri binary
-  install -Dm755 \
-    "src-tauri/target/release/powerctl" \
-    "$pkgdir/usr/bin/powerctl"
-
+  install -Dm755 "src-tauri/target/release/powerctl" "$pkgdir/usr/bin/powerctl"
+  
   # Install the installer script
-  install -Dm755 \
-    "src-tauri/scripts/install-powerctl.sh" \
-    "$pkgdir/usr/local/bin/install-powerctl.sh"
-
-  # Install license
-  install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
-
+  install -Dm755 "src-tauri/scripts/install-powerctl.sh" "$pkgdir/usr/local/bin/install-powerctl.sh"
   
-  install -Dm644 "powerctl.desktop" "$pkgdir/usr/share/applications/powerctl.desktop"
-  
+  # Install license (if it exists in the tarball)
+  if [ -f "LICENSE" ]; then
+    install -Dm644 "LICENSE" "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+  fi
 }
