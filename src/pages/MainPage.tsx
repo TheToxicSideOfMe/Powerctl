@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import  { useState, useEffect } from 'react';
 import { invoke } from '@tauri-apps/api/core';
 import { Toaster, toast } from 'react-hot-toast';
-import { Zap, Battery, Cpu, Gauge, Smartphone, MonitorSmartphone, Monitor, X, Check, Leaf, CpuIcon, GpuIcon } from 'lucide-react';
+import { Zap, Battery, Cpu, Gauge, MonitorSmartphone, X, Check, Leaf, CpuIcon, GpuIcon } from 'lucide-react';
 
 const MainPage = () => {
   const [activeTab, setActiveTab] = useState('profiles');
@@ -11,10 +11,10 @@ const MainPage = () => {
   const [batteryLevel, setBatteryLevel] = useState(0);
   const [isCharging, setIsCharging] = useState(false);
   const [currentGpuMode, setCurrentGpuMode] = useState('unknown');
-  const [selectedGpuMode, setSelectedGpuMode] = useState('unknown');
+  const [selectedGpuMode, setSelectedGpuMode] = useState<any>('unknown');
   const [loading, setLoading] = useState(true);
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
-  const [pendingGpuMode, setPendingGpuMode] = useState(null);
+  const [pendingGpuMode, setPendingGpuMode] = useState<any>(null);
 
   const profiles = [
     {
@@ -71,7 +71,7 @@ const MainPage = () => {
   useEffect(() => {
     async function loadStats() {
       try {
-        const stats = await invoke('detect_stats');
+        const stats:any = await invoke('detect_stats');
         
         setCpuModel(stats.cpu_model);
         setCpuBoost(stats.cpu_boost === '1');
@@ -96,7 +96,7 @@ const MainPage = () => {
   useEffect(() => {
     async function updateBattery() {
       try {
-        const battery = await invoke('get_battery_status');
+        const battery:any = await invoke('get_battery_status');
         setBatteryLevel(battery.capacity);
         setIsCharging(battery.status === 'Charging');
       } catch (error) {
@@ -110,7 +110,7 @@ const MainPage = () => {
     return () => clearInterval(interval);
   }, []);
 
-  const handleProfileChange = async (profileId) => {
+  const handleProfileChange = async (profileId:string) => {
     try {
       setLoading(true);
       
@@ -119,7 +119,7 @@ const MainPage = () => {
       await invoke('set_profile', { profileName: profileId });
       
       // Refresh stats after profile change
-      const stats = await invoke('detect_stats');
+      const stats:any = await invoke('detect_stats');
       setCpuBoost(stats.cpu_boost === '1');
       setActiveProfile(stats.power_profile);
       
