@@ -1,9 +1,10 @@
 [Desktop Entry]
 Name=PowerCTL
-Comment=CPU/GPU power profile manager for Linux
+Comment=CPU/GPU power profile manager
 Exec=powerctl
 Icon=powerctl
-Terminal=false
 Type=Application
-Categories=Utility;System;
+Categories=System;Settings;
+Keywords=power;cpu;gpu;performance;battery;profile;
+Terminal=false
 StartupNotify=true
