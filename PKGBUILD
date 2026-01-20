@@ -12,7 +12,7 @@ optdepends=('supergfxctl: For GPU power management on supported systems')
 makedepends=('rust' 'cargo' 'nodejs' 'pnpm')
 install=powerctl.install
 source=("$pkgname-$pkgver.tar.gz::$url/archive/refs/tags/$pkgver.tar.gz")
-sha256sums=('6a8a8896f0fcc1fe3fc3963aaf9d9c3783c26216b1c054dd014af4d61c7b6484')
+sha256sums=('3bdb8c32399a5fb4d925e703cf822d8e9839e9e556e0e05e90a67c5c2235143c')
 
 build() {
   cd "$_pkgname-$pkgver"
