@@ -40,6 +40,14 @@ package() {
   # Install the installer script
   install -Dm755 "src-tauri/scripts/install-powerctl.sh" "$pkgdir/usr/local/bin/install-powerctl.sh"
   
+  # Install desktop file
+  install -Dm644 "powerctl.desktop" "$pkgdir/usr/share/applications/powerctl.desktop"
+  
+  # Install icon (if available)
+  if [ -f "src-tauri/icons/128x128.png" ]; then
+    install -Dm644 "src-tauri/icons/128x128.png" "$pkgdir/usr/share/pixmaps/powerctl.png"
+  fi
+  
   # Install license (if it exists in the tarball)
   if [ -f "LICENSE" ]; then
     install -Dm644 "LICENSE" "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
